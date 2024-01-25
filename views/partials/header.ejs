@@ -1,0 +1,54 @@
+<header>
+    <!-- Navbar -->
+    <nav class="header hide-on-med-and-down">
+        <div class="nav-wrapper">
+            <ul class="left">
+                <li class="logo" id="home-link"><a href="/"><img src="../../assets/images/logo.png" alt="Logo"></a></li>
+            </ul>
+            <ul class="right">
+                <li id="profile-link" style="display: none;">
+                    <a href="/profile">
+                        <i class="material-icons">account_circle</i>
+                    </a>
+                </li>
+                <li>
+                    <button id="signin-link" class="btn" onclick="location.href='/auth/signin'">
+                        Sign In
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Sidebar (Mobile) -->
+    <ul id="slide-out" class="sidenav">
+        <li>
+            <div class="user-view">
+                <!-- Your user view content here -->
+            </div>
+        </li>
+        <li class="logo" id="home-link-mobile"><a href="/"><img src="../../assets/images/logo.png" alt="Logo"></a></li>
+        <li id="profile-link-mobile" style="display: none; list-style: none;">
+            <a href="/profile" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+                <i class="material-icons" style="margin-right: 8px;">account_circle</i>
+                Profile
+            </a>
+        </li>
+        <li>
+            <button id="signin-link-mobile" class="btn" onclick="location.href='/auth/signin'">
+                Sign In
+            </button>
+        </li>
+        <li>
+            <button id="close-sidebar" onclick="closeSidebar()" class="transparent-btn">
+                <i class="material-icons">close</i>
+            </button>
+        </li>
+    </ul>
+
+    <nav class="header hide-on-large-only">
+        <div class="nav-wrapper">
+            <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        </div>
+    </nav>
+</header>
