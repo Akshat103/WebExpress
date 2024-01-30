@@ -1,7 +1,7 @@
 // controllers/homeController.js
 const homeController = {
     index: (req, res) => {
-        res.render('home');
+        res.status(200).render('home');
     }
 };
 

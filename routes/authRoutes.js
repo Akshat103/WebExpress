@@ -55,7 +55,4 @@ router.get('/github/callback', (req, res, next) => {
     })(req, res, next);
 });
 
-// Define routes
-router.get('/signin', authController.signIn);
-
 module.exports = router;

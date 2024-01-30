@@ -5,9 +5,6 @@ const GitHubStrategy = require('passport-github').Strategy;
 const User = require('../models/User');
 
 const authController = {
-    signIn: (req, res) => {
-        res.render('signin');
-    },
     setupGitHubStrategy: (passport, req, res) => {
         passport.use(
             new GitHubStrategy(
