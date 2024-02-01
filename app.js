@@ -24,12 +24,14 @@ const profileRoutes = require('./routes/profileRoutes');
 const authRoutes = require('./routes/authRoutes');
 const formRoutes = require('./routes/formRoutes');
 const errorRoutes = require('./routes/errorRoutes');
+const siteRoutes = require('./routes/siteRoutes');
 
 app.use('/', homeRoutes);
 app.use('/profile', profileRoutes);
 app.use('/auth', authRoutes);
 app.use('/form', formRoutes);
 app.use('/error', errorRoutes);
+app.use('/', siteRoutes);
 
 // Handle undefined routes (404)
 app.use((req, res) => {

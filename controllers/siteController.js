@@ -1,3 +1,31 @@
+// controllers/siteController.js
+
+const path = require('path');
+// const ResumeData = require('../models/ResumeData');
+
+const siteController = {
+  renderTheme: async (req, res, next) => {
+    try {
+    //   const username = req.params.username;
+    //   const resumeData = await ResumeData.findOne({ userId: username });
+
+      if (!resumeData) {
+        // Handle case where resume data is not found
+        return res.status(404).render('notfound');
+      }
+
+      const themeName = resumeData.theme || 'default';
+      const themePath = path.join(__dirname, `../views/themes/${themeName}.ejs`);
+    //   console.log(resumeData)
+      // Render the theme with resume data
+      res.render(themePath, { resumeData });
+    } catch (err) {
+      // Handle errors
+      next(err);
+    }
+  },
+};
+
 const resumeData = {
     name: "Your Full Name",
     title: "Your Job Title",
@@ -41,3 +69,5 @@ const resumeData = {
     summary: "Your interests and passions", // Replacing "interests"
     resumeLink: "https://drive.google.com/file/d/your-resume-file-id/view?usp=sharing", // Optional
   };
+
+module.exports = siteController;
