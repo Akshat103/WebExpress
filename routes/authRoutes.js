@@ -39,7 +39,7 @@ router.get('/github/callback', (req, res, next) => {
             console.error(err);
             return res.redirect('/error');
         }
-        
+
         if (!user) {
             return res.redirect('/error');
         }
@@ -53,6 +53,12 @@ router.get('/github/callback', (req, res, next) => {
             res.send('<script>window.sessionStorage.setItem("loggedIn", true); window.location.href = "/";</script>');
         });
     })(req, res, next);
+});
+
+// Route to handle sign-out request
+router.post('/signout', (req, res) => {
+    console.log('User signed out.');
+    res.status(200).send('Sign-out request received.');
 });
 
 module.exports = router;
