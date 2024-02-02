@@ -10,17 +10,13 @@ const siteController = {
     //   const resumeData = await ResumeData.findOne({ userId: username });
 
       if (!resumeData) {
-        // Handle case where resume data is not found
         return res.status(404).render('notfound');
       }
 
       const themeName = resumeData.theme || 'default';
       const themePath = path.join(__dirname, `../views/themes/${themeName}.ejs`);
-    //   console.log(resumeData)
-      // Render the theme with resume data
       res.render(themePath, { resumeData });
     } catch (err) {
-      // Handle errors
       next(err);
     }
   },
