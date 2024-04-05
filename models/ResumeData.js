@@ -1,30 +1,47 @@
 const mongoose = require('mongoose');
 
 const resumeSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true, index: true },
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  phone: { type: String, required: true },
+  user: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: [true, 'User ID is required'], 
+    unique: true, 
+    index: true 
+  },
+  name: { 
+    type: String, 
+    required: [true, 'Name is required'] 
+  },
+  email: { 
+    type: String, 
+    required: [true, 'Email is required'], 
+    match: [/^[\w-]+(?:\.[\w-]+)*@(?:[\w-]+\.)+[a-zA-Z]{2,7}$/, 'Invalid email format'] 
+  },
+  phone: { 
+    type: String, 
+    required: [true, 'Phone number is required'], 
+    match: [/^[0-9]{10}$/, 'Invalid phone number format (10 digits)'] 
+  },
   profiles: {
     github: { type: String },
     linkedin: { type: String }
   },
   education: [{
-    institution: { type: String, required: true },
-    year: { type: String, required: true },
-    degree: { type: String, required: true },
-    grade: { type: String, required: true }
+    institution: { type: String, required: [true, 'Institution is required'] },
+    year: { type: String, required: [true, 'Year is required'] },
+    degree: { type: String, required: [true, 'Degree is required'] },
+    grade: { type: String, required: [true, 'Grade is required'] }
   }],
   experience: [{
-    employer: { type: String, required: true },
-    position: { type: String, required: true },
-    description: { type: String, required: true }
+    employer: { type: String, required: [true, 'Employer is required'] },
+    position: { type: String, required: [true, 'Position is required'] },
+    description: { type: String, required: [true, 'Description is required'] }
   }],
-  skills: [{ type: String }],
+  skills: [{ type: String, required: [true, 'At least one skill is required'] }],
   projects: [{
-    name: { type: String, required: true },
-    tech: [{ type: String }],
-    description: { type: String, required: true }
+    name: { type: String, required: [true, 'Project name is required'] },
+    tech: [{ type: String, required: [true, 'At least one technology is required'] }],
+    description: { type: String, required: [true, 'Project description is required'] }
   }]
 });
 

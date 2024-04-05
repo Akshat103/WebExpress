@@ -3,11 +3,18 @@ const jwt = require('jsonwebtoken');
 
 const authenticateToken = async (req, res, next) => {
     try {
-        if (req.headers.authorization === undefined) {
+        if (req.headers.cookie === undefined) {
             return res.status(401).redirect('/auth/github');
         }
-        const token = req.headers.authorization.split(' ')[1];
 
+        const cookieString = req.headers.cookie;
+        const cookies = cookieString.split('; ').reduce((prev, current) => {
+            const [name, value] = current.split('=');
+            prev[name] = value;
+            return prev;
+        }, {});
+        
+        const token = cookies.token;
         try {
             const lastLogin = await LastLogin.findOne({ token });
 

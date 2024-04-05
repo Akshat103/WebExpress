@@ -12,23 +12,47 @@ const createResume = async (req, res) => {
     const { userId } = req.userData;
     const { name, email, phone, profiles, education, experience, skills, projects } = req.body;
 
-    const resume = new Resume({
-      user: userId,
-      name,
-      email,
-      phone,
-      profiles,
-      education,
-      experience,
-      skills,
-      projects
-    });
+    let resume = await Resume.findOne({ user: userId });
 
+    if (resume) {
+      resume.name = name;
+      resume.email = email;
+      resume.phone = phone;
+      resume.profiles = profiles;
+      resume.education = education;
+      resume.experience = experience;
+      resume.skills = skills;
+      resume.projects = projects;
+    } else {
+      resume = new Resume({
+        user: userId,
+        name,
+        email,
+        phone,
+        profiles,
+        education,
+        experience,
+        skills,
+        projects
+      });
+    }
+
+    await resume.validate();
     await resume.save();
-    res.status(201).json({ message: 'Resume created successfully' });
+    
+    const message = resume.isNew ? 'Resume created successfully' : 'Resume updated successfully';
+    res.status(201).json({ message });
   } catch (error) {
-    console.error('Error creating resume:', error);
-    res.status(500).json({ message: error.message });
+    if (error.name === 'ValidationError') {
+      const validationErrors = {};
+      for (const field in error.errors) {
+        validationErrors[field] = error.errors[field].message;
+      }
+      res.status(400).json({ message: 'Validation failed', errors: validationErrors });
+    } else {
+      console.error('Error creating/updating resume:', error);
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 

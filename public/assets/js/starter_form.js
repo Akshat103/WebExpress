@@ -187,17 +187,31 @@ function getDataFromForm() {
 
   // Retrieve project data
   const projectEntries = document.querySelectorAll(".projects-form");
-  console.log(projectEntries);
   projectEntries.forEach(entry => {
-    console.log(entry);
     const projectName = entry.querySelector(".project-name").value.trim();
     const projectTech = entry.querySelector(".project-tech").value.trim();
     const projectDescription = entry.querySelector(".project-description").value.trim();
     formData.projects.push({ name: projectName, tech: projectTech.split(","), description: projectDescription });
   });
 
-  console.log(formData);
+  return formData;
+
 }
 
-
-
+function postResumeData() {
+  const formData = getDataFromForm();
+  console.log(formData);
+  axios.post('/resume', formData)
+    .then(response => {
+      openModal('Registration Successful', response.data.message);
+      setTimeout(() => {
+        closeModal();
+        window.location.href = '/profile';
+    }, 3000);
+    })
+    .catch(error => {
+      openModal('Registration Unsuccessful', error.message)
+    });
+  
+  event.preventDefault();
+}
