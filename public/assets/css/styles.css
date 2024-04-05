@@ -1,12 +1,25 @@
-body  {
+body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     text-align: center;
+    color: white;
 }
 
-.header{
+main{
+    background: linear-gradient(to bottom, #07090f, #54326d);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.header {
     background-color: #07090f;
+}
+
+.footer{
+    background-color: #07090f;
+    margin: auto;
+    padding: 1rem;
 }
 
 #close-sidebar {
@@ -19,11 +32,12 @@ body  {
     right: 10px;
 }
 
-#signin-link{
+#signin-link {
     margin: 1rem;
     background-color: #a37c40;
 }
-#signin-link-mobile{
+
+#signin-link-mobile {
     margin: 1rem;
     background-color: #a37c40;
 }

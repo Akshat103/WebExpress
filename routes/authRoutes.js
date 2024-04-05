@@ -55,10 +55,4 @@ router.get('/github/callback', (req, res, next) => {
     })(req, res, next);
 });
 
-// Route to handle sign-out request
-router.post('/signout', (req, res) => {
-    console.log('User signed out.');
-    res.status(200).send('Sign-out request received.');
-});
-
 module.exports = router;

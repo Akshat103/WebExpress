@@ -1,34 +1,31 @@
-// main.js
+// sidebar
+function closeSidebar() {
+    M.Sidenav.getInstance(document.querySelector('.sidenav')).close();
+}
 
-document.addEventListener('DOMContentLoaded', function () {
-    updateNavbarVisibility();
+$(document).ready(function () {
+    $('.sidenav').sidenav();
 });
 
-function checkTokenInCookies() {
-    var loggedIn = sessionStorage.getItem("loggedIn");
-    return loggedIn
+// navbar
+function updateNavbarVisibility() {
+    var tokenExists = checkTokenInCookies();
+    var navbarElements = {
+        'home': 'block',
+        'profile': tokenExists ? 'block' : 'none',
+        'signin': tokenExists ? 'none' : 'block'
+    };
+
+    Object.keys(navbarElements).forEach(function (element) {
+        setElementDisplay(element, navbarElements[element]);
+    });
 }
 
-if (sessionStorage.getItem('loggedIn') === 'true') {
-    function informServerOnSignOut() {
-        fetch('/auth/signout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({}),
-        })
-            .then(response => {
-                if (response.ok) {
-                    console.log('User signed out successfully.');
-                } else {
-                    console.error('Failed to inform the server about sign out.');
-                }
-            })
-            .catch(error => {
-                console.error('Error during sign out:', error);
-            });
-    }
+function setElementDisplay(element, display) {
+    var desktopLink = document.getElementById(element + '-link');
+    var mobileLink = document.getElementById(element + '-link-mobile');
 
-    window.addEventListener('unload', informServerOnSignOut);
+    desktopLink.style.display = display;
+    mobileLink.style.display = display;
 }
+
