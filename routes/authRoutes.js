@@ -1,4 +1,3 @@
-// routes/authRoutes.js
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
@@ -34,7 +33,7 @@ router.get('/github', passport.authenticate('github'));
 
 // GitHub callback route
 router.get('/github/callback', (req, res, next) => {
-    passport.authenticate('github', { failureRedirect: '/error' }, (err, user) => {
+    passport.authenticate('github', { failureRedirect: '/error' }, (err, { user, token }) => {
         if (err) {
             console.error(err);
             return res.redirect('/error');
@@ -50,7 +49,8 @@ router.get('/github/callback', (req, res, next) => {
                 return res.redirect('/error');
             }
 
-            res.send('<script>window.sessionStorage.setItem("loggedIn", true); window.location.href = "/";</script>');
+            res.cookie('token', token, { httpOnly: true });
+            res.send(`<script>window.sessionStorage.setItem("loggedIn", true); window.location.href = "/";</script>`);
         });
     })(req, res, next);
 });

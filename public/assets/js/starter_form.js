@@ -175,7 +175,7 @@ function getDataFromForm() {
     const employer = entry.querySelector(".employer").value.trim();
     const year = entry.querySelector(".year").value.trim();
     const position = entry.querySelector(".position").value.trim();
-    const description = entry.querySelector(".discription").value.trim();
+    const description = entry.querySelector(".description").value.trim();
     formData.experience.push({ employer, year, position, description });
   });
 

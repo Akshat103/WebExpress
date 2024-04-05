@@ -9,11 +9,11 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 // Middleware
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({ secret: process.env.SESSION_SECRET || 'default-secret-value', resave: false, saveUninitialized: true }));
 app.set('view engine', 'ejs');
-app.use(express.static(path.join(__dirname, 'public'), { 'extensions': ['html', 'css'] }));
-app.use(session({ secret: process.env.CLIENTSECRET, resave: false, saveUninitialized: true }));
 
 // Connect to MongoDB
 connectDB();
@@ -22,14 +22,14 @@ connectDB();
 const homeRoutes = require('./routes/homeRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const authRoutes = require('./routes/authRoutes');
-const formRoutes = require('./routes/formRoutes');
+const resumeDataRoutes = require('./routes/resumeDataRoutes');
 const errorRoutes = require('./routes/errorRoutes');
 const siteRoutes = require('./routes/siteRoutes');
 
 app.use('/', homeRoutes);
 app.use('/profile', profileRoutes);
 app.use('/auth', authRoutes);
-app.use('/form', formRoutes);
+app.use('/', resumeDataRoutes);
 app.use('/error', errorRoutes);
 app.use('/', siteRoutes);
 

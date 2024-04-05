@@ -9,5 +9,5 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model('User', userSchema);
-
+User.createIndexes();
 module.exports = User;
