@@ -3,16 +3,37 @@
   <form id="profileForm">
     <h5>Get Started</h5>
 
+    <div class="row doc-upload">
+      <div class="col s6">
+        <div class="profile-image">
+          <label for="profile" class="upload-button dark-theme">Upload Profile Image</label>
+          <input id="profile" type="file" accept="image/*" class="hidden" onchange="showImageName()">
+          <p id="image-name" class="file-name"></p>
+        </div>
+      </div>
+      <div class="col s6">
+        <div class="resume-doc">
+          <label for="resume" class="upload-button dark-theme">Upload Resume</label>
+          <input id="resume" type="file" accept=".doc, .docx, .pdf" class="hidden" onchange="showResumeName()">
+          <p id="resume-name" class="file-name"></p>
+      </div>      
+      </div>
+    </div>
+
     <div class="row">
-      <div class="col s12">
+      <div class="col s6">
         <input id="name" type="text" class="validate" required>
         <label for="name">Full Name</label>
+      </div>
+      <div class="col s6">
+        <input id="title" type="text" class="validate" required>
+        <label for="title">Job Title</label>
       </div>
     </div>
     <div class="row">
       <div class="col s12">
-        <input id="title" type="text" class="validate" required>
-        <label for="title">Job Title</label>
+        <input id="about" type="text" class="validate" required>
+        <label for="about">About You</label>
       </div>
     </div>
 
@@ -123,6 +144,7 @@
       <button id="add-project" onclick="addProject()" class="btn" type="button"><i class="fa-solid fa-plus"></i> Add
         Project</button>
     </div>
-    <button class="btn waves-effect waves-light" onclick="postResumeData()">Submit<i class="material-icons right">send</i></button>
+    <button class="btn waves-effect waves-light" type='submit'>Submit<i
+        class="material-icons right">send</i></button>
   </form>
 </div>

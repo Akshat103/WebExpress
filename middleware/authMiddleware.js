@@ -19,17 +19,19 @@ const authenticateToken = async (req, res, next) => {
             const lastLogin = await LastLogin.findOne({ token });
 
             if (!lastLogin) {
+                console.log("Last log in not found")
                 return res.status(401).redirect('/auth/github');
             }
 
             const now = new Date();
             if (lastLogin.expiresIn < now) {
+                console.log("Last log in expired")
                 return res.redirect('/auth/github');
             }
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            const userId = decoded.userId;
-            req.userData = { userId };
+            const username = decoded.username;
+            req.userData = { username };
 
         } catch (error) {
             console.error('Error decoding JWT token:', error);

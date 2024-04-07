@@ -8,6 +8,8 @@ const userSchema = new mongoose.Schema({
   photos: { type: String, required: true }
 });
 
+userSchema.index({ githubId: 1 }, { unique: true });
+userSchema.index({ username: 1 }, { unique: true });
+
 const User = mongoose.model('User', userSchema);
-User.createIndexes();
 module.exports = User;

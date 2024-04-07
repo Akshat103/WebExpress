@@ -9,13 +9,19 @@ const formController = {
 
 const createResume = async (req, res) => {
   try {
-    const { userId } = req.userData;
-    const { name, email, phone, profiles, education, experience, skills, projects } = req.body;
+    const { username } = req.userData;
+    const { name, title, about, email, phone, profiles, education, experience, skills, projects } = req.body;
+    const profileImageURI = req.files[0].path.split("public")[1];
+    const resumeURI = req.files[1].path.split("public")[1];
 
-    let resume = await Resume.findOne({ user: userId });
+    let resume = await Resume.findOne({ user: username });
 
     if (resume) {
       resume.name = name;
+      resume.title = title;
+      resume.about = about;
+      resume.profileImage = profileImageURI;
+      resume.resume = resumeURI;
       resume.email = email;
       resume.phone = phone;
       resume.profiles = profiles;
@@ -25,8 +31,12 @@ const createResume = async (req, res) => {
       resume.projects = projects;
     } else {
       resume = new Resume({
-        user: userId,
+        user: username,
         name,
+        title,
+        about,
+        profileImage: profileImageURI,
+        resume: resumeURI,
         email,
         phone,
         profiles,
@@ -39,9 +49,10 @@ const createResume = async (req, res) => {
 
     await resume.validate();
     await resume.save();
-    
+
     const message = resume.isNew ? 'Resume created successfully' : 'Resume updated successfully';
     res.status(201).json({ message });
+
   } catch (error) {
     if (error.name === 'ValidationError') {
       const validationErrors = {};
@@ -56,18 +67,4 @@ const createResume = async (req, res) => {
   }
 };
 
-const getResumeByUserId = async (req, res) => {
-  try {
-    const userId = req.params.userId;
-    const resume = await Resume.findOne({ user: userId });
-    if (!resume) {
-      return res.status(404).json({ message: 'Resume not found' });
-    }
-    res.status(200).json(resume);
-  } catch (error) {
-    console.error('Error fetching resume:', error);
-    res.status(500).json({ message: error._message });
-  }
-};
-
-module.exports = { createResume, getResumeByUserId, formController };
+module.exports = { createResume, formController };

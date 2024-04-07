@@ -143,75 +143,110 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+function showImageName() {
+  const input = document.getElementById('profile');
+  const imageNameElement = document.getElementById('image-name');
+
+  if (input.files.length > 0) {
+    const imageName = input.files[0].name;
+    imageNameElement.textContent = `Uploaded: ${imageName}`;
+  } else {
+    imageNameElement.textContent = '';
+  }
+}
+
+function showResumeName() {
+  const fileInput = document.getElementById('resume');
+  const fileName = fileInput.files[0].name;
+  const resumeNameElement = document.getElementById('resume-name');
+  resumeNameElement.textContent = fileName;
+}
+
+const form = document.getElementById("profileForm");
+
+form.addEventListener("submit", submitForm);
+
 function getDataFromForm() {
-  const formData = {
-    name: document.getElementById("name").value.trim(),
-    email: document.getElementById("email").value.trim(),
-    phone: document.getElementById("phone").value.trim(),
-    profiles: {
-      github: document.getElementById("github-url").value.trim(),
-      linkedin: document.getElementById("linkedin-url").value.trim(),
-      website: document.getElementById("website-url").value.trim()
-    },
-    education: [],
-    experience: [],
-    skills: [],
-    projects: []
-  };
+  const formData = new FormData();
 
-  // Retrieve education data
+  // Append form fields to FormData object
+  formData.append("name", document.getElementById("name").value.trim());
+  formData.append("title", document.getElementById("title").value.trim());
+  formData.append("about", document.getElementById("about").value.trim());
+  formData.append("email", document.getElementById("email").value.trim());
+  formData.append("phone", document.getElementById("phone").value.trim());
+  formData.append("profiles[github]", document.getElementById("github-url").value.trim());
+  formData.append("profiles[linkedin]", document.getElementById("linkedin-url").value.trim());
+  formData.append("profiles[website]", document.getElementById("website-url").value.trim());
+
+  // Append uploaded profile image
+  const profileImage = document.getElementById("profile").files[0];
+  if (profileImage) {
+    formData.append("profileImage", profileImage);
+  }
+
+  // Append uploaded resume
+  const resume = document.getElementById("resume").files[0];
+  if (resume) {
+    formData.append("resume", resume);
+  }
+
+  // Append education data
   const educationEntries = document.querySelectorAll(".education-form");
-  educationEntries.forEach(entry => {
-    const institution = entry.querySelector(".institution").value.trim();
-    const year = entry.querySelector(".year").value.trim();
-    const degree = entry.querySelector(".degree").value.trim();
-    const grade = entry.querySelector(".grade").value.trim();
-    formData.education.push({ institution, year, degree, grade });
+  educationEntries.forEach((entry, index) => {
+    formData.append(`education[${index}][institution]`, entry.querySelector(".institution").value.trim());
+    formData.append(`education[${index}][year]`, entry.querySelector(".year").value.trim());
+    formData.append(`education[${index}][degree]`, entry.querySelector(".degree").value.trim());
+    formData.append(`education[${index}][grade]`, entry.querySelector(".grade").value.trim());
   });
 
-  // Retrieve experience data
+  // Append experience data
   const experienceEntries = document.querySelectorAll(".experience-form");
-  experienceEntries.forEach(entry => {
-    const employer = entry.querySelector(".employer").value.trim();
-    const year = entry.querySelector(".year").value.trim();
-    const position = entry.querySelector(".position").value.trim();
-    const description = entry.querySelector(".description").value.trim();
-    formData.experience.push({ employer, year, position, description });
+  experienceEntries.forEach((entry, index) => {
+    formData.append(`experience[${index}][employer]`, entry.querySelector(".employer").value.trim());
+    formData.append(`experience[${index}][year]`, entry.querySelector(".year").value.trim());
+    formData.append(`experience[${index}][position]`, entry.querySelector(".position").value.trim());
+    formData.append(`experience[${index}][description]`, entry.querySelector(".description").value.trim());
   });
 
-  // Retrieve selected skills
+  // Append selected skills
   const selectedSkills = document.querySelectorAll(".selected-skill");
-  selectedSkills.forEach(skill => {
-    formData.skills.push(skill.textContent.trim().split(" ×")[0]);
+  selectedSkills.forEach((skill, index) => {
+    formData.append(`skills[${index}]`, skill.textContent.trim().split(" x")[0]);
   });
 
-  // Retrieve project data
+  // Append project data
   const projectEntries = document.querySelectorAll(".projects-form");
-  projectEntries.forEach(entry => {
-    const projectName = entry.querySelector(".project-name").value.trim();
-    const projectTech = entry.querySelector(".project-tech").value.trim();
-    const projectDescription = entry.querySelector(".project-description").value.trim();
-    formData.projects.push({ name: projectName, tech: projectTech.split(","), description: projectDescription });
+  projectEntries.forEach((entry, index) => {
+    formData.append(`projects[${index}][name]`, entry.querySelector(".project-name").value.trim());
+    formData.append(`projects[${index}][tech]`, entry.querySelector(".project-tech").value.trim());
+    formData.append(`projects[${index}][description]`, entry.querySelector(".project-description").value.trim());
   });
 
   return formData;
-
 }
 
-function postResumeData() {
+function submitForm(e) {
+  e.preventDefault();
+  // showLoading();
+
   const formData = getDataFromForm();
-  console.log(formData);
-  axios.post('/resume', formData)
+
+  axios.post('/resume', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
     .then(response => {
+      // hideLoading();
       openModal('Registration Successful', response.data.message);
       setTimeout(() => {
         closeModal();
         window.location.href = '/profile';
-    }, 3000);
+      }, 3000);
     })
     .catch(error => {
+      // hideLoading();
       openModal('Registration Unsuccessful', error.message)
     });
-  
-  event.preventDefault();
 }
