@@ -32,6 +32,7 @@ const authenticateToken = async (req, res, next) => {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const username = decoded.username;
             req.userData = { username };
+            req.session.username = req.userData;
 
         } catch (error) {
             console.error('Error decoding JWT token:', error);
