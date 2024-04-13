@@ -1,4 +1,5 @@
 const LastLogin = require('../models/LastLoginModel');
+const Resume = require('../models/ResumeDataModel');
 const jwt = require('jsonwebtoken');
 
 const authenticateToken = async (req, res, next) => {
@@ -31,8 +32,13 @@ const authenticateToken = async (req, res, next) => {
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const username = decoded.username;
-            req.userData = { username };
-            req.session.username = req.userData;
+
+            const UserResume = Resume.findOne({ user: username });
+            let resume;
+            if(UserResume) resume = true;
+            else resume = false;
+            req.userData = { username, resume };
+            req.session.username = username;
 
         } catch (error) {
             console.error('Error decoding JWT token:', error);

@@ -8,14 +8,11 @@ const profileController = {
             const user = await User.findOne({ username: username });
 
             if (!user) {
-                return res.status(404).json({ message: 'User not found' });
+                let message = "User not found !!!";
+                res.render('error', { message });
             }
 
             const resume = await Resume.findOne({ user: username });
-
-            if (!resume) {
-                return res.status(404).json({ message: 'Resume not found' });
-            }
 
             res.render('profile', { user, resume });
         } catch (error) {

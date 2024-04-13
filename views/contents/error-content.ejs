@@ -1,2 +1,7 @@
-<h1>Error</h1>
-<p>Something went wrong. Please try again later.</p>
+<div class="content">
+    <h1>Error</h1>
+    <p>Something went wrong. Please try again later.</p>
+    <% if (typeof message !== 'undefined' && message !== null) { %>
+        <strong><%= message %></strong>
+    <% } %>
+</div>

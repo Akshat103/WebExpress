@@ -285,6 +285,10 @@ body {
     display: ruby;
 }
 
+.content{
+    height: 100vh;
+}
+
 @media (min-width: 786px) {
     .layout {
         grid-template-columns: repeat(2, 1fr);

@@ -50,9 +50,9 @@ const resumeSchema = new mongoose.Schema({
     grade: { type: String, required: [true, 'Grade is required'] }
   }],
   experience: [{
-    employer: { type: String, required: [true, 'Employer is required'] },
-    position: { type: String, required: [true, 'Position is required'] },
-    description: { type: String, required: [true, 'Description is required'] }
+    employer: { type: String },
+    position: { type: String },
+    description: { type: String },
   }],
   skills: [{ type: String, required: [true, 'At least one skill is required'] }],
   projects: [{

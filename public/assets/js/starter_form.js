@@ -227,7 +227,7 @@ function submitForm(e) {
   // showLoading();
 
   const formData = getDataFromForm();
-
+  console.log(formData)
   axios.post('/resume', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
