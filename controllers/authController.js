@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const GitHubStrategy = require('passport-github').Strategy;
-const User = require('../models/User');
+const User = require('../models/UserModel');
 const LastLogin = require('../models/LastLoginModel');
 
 const authController = {

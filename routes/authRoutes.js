@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const passport = require('passport');
-const User = require('../models/User');
+const User = require('../models/UserModel');
 
 // Initialize Passport
 router.use(passport.initialize());
@@ -50,7 +50,15 @@ router.get('/github/callback', (req, res, next) => {
             }
 
             res.cookie('token', token, { httpOnly: true });
-            res.send(`<script>window.sessionStorage.setItem("loggedIn", true); window.location.href = "/";</script>`);
+            res.send(`
+    <script>
+        var expirationDate = new Date();
+        expirationDate.setTime(expirationDate.getTime() + (1 * 60 * 60 * 1000));
+        document.cookie = "loggedIn=true; expires=" + expirationDate.toUTCString() + "; path=/";
+        window.location.href = "/";
+    </script>
+`);
+
         });
     })(req, res, next);
 });

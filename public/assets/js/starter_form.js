@@ -2,10 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
   updateNavbarVisibility();
 });
 
-function checkTokenInCookies() {
-  return sessionStorage.getItem("loggedIn");
-}
-
 function addForm(formClass, entryClass, removeClass) {
   var formContainers = document.querySelectorAll("." + formClass);
   var lastFormContainer = formContainers[0];

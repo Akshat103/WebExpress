@@ -1,2 +1,94 @@
-<h1>User Profile</h1>
-<!-- Profile content goes here -->
+<div class="container">
+    <div class="profile-card">
+        <img class="profile-img" src="<%= user.photos %>" alt="Profile Image">
+        <div class="profile-details">
+            <h5>
+                <%= user.name %>
+            </h5>
+            <p><strong>Github:</strong> <a href="<%= user.profileUrl %>">
+                    <%= user.username %>
+                </a></p>
+        </div>
+    </div>
+    <h3 class="section-title">Resume Information</h3>
+    <div class="profile-section">
+        <div class="upper">
+            <div class="img">
+                <img class="profile-img" src="<%= resume.profileImage %>" alt="Profile Image">
+            </div>
+            <div class="details">
+                <p><strong>Email:</strong>
+                    <%= resume.email %>
+                </p>
+                <p><strong>Phone:</strong>
+                    <%= resume.phone %>
+                </p>
+                <div class="profiles">
+                    <p><a href="<%= resume.profiles.github %>">
+                            <strong>Github</strong>
+                        </a></p>
+                    <p><a href="<%= resume.profiles.linkedin %>">
+                            <strong>Linkedin</strong>
+                        </a></p>
+                    <p><a href="<%= resume.profiles.website %>">
+                            <strong>Website</strong>
+                        </a></p>
+                </div>
+                <p><strong>About:</strong>
+                    <%= resume.about %>
+                </p>
+            </div>
+        </div>
+        <section class="layout">
+            <div class="grow1">
+                <h5 class="head">Education</h5>
+                <ul>
+                    <% resume.education.forEach(edu=> { %>
+                        <li>
+                            <%= edu.degree %> from <%= edu.institution %>
+                                    <br>
+                                    (Year: <%= edu.year %>, Grade: <%= edu.grade %>)
+                        </li>
+                        <% }); %>
+                </ul>
+            </div>
+            <div class="grow1">
+                <h5 class="head">Experience</h5>
+                <ul>
+                    <% resume.experience.forEach(exp=> { %>
+                        <li>
+                            <%= exp.position %> at <%= exp.employer %>
+                                    <br>
+                                    <%= exp.description %>
+                        </li>
+                        <% }); %>
+                </ul>
+            </div>
+            <div class="grow1">
+                <h5 class="head">Skills</h5>
+                <div class="skills">
+                    <ul>
+                        <% resume.skills.forEach((skill, index)=> { %>
+                            <li>
+                                <%= skill %>
+                            </li>
+                            <% }); %>
+                    </ul>
+                </div>
+            </div>
+            <div class="grow1">
+                <h5 class="head">Projects</h5>
+                <ul>
+                    <% resume.projects.forEach(project=> { %>
+                        <li><strong>
+                                <%= project.name %>
+                            </strong>
+                            <br>
+                            <%= project.description %>
+                        </li>
+                        <% }); %>
+                </ul>
+            </div>
+        </section>
+    </div>
+</div>

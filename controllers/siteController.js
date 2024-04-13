@@ -1,7 +1,7 @@
 // controllers/siteController.js
 
 const path = require('path');
-const ResumeData = require('../models/ResumeData');
+const ResumeData = require('../models/ResumeDataModel');
 
 const siteController = {
   renderTheme: async (req, res, next) => {

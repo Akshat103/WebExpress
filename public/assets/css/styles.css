@@ -4,9 +4,6 @@ body {
     box-sizing: border-box;
     text-align: center;
     color: white;
-}
-
-main{
     background: linear-gradient(to bottom, #07090f, #54326d);
     background-repeat: no-repeat;
     background-size: cover;
@@ -16,7 +13,7 @@ main{
     background-color: #07090f;
 }
 
-.footer{
+.footer {
     background-color: #07090f;
     margin: auto;
     padding: 1rem;
@@ -30,6 +27,22 @@ main{
     position: absolute;
     top: 10px;
     right: 10px;
+}
+
+.sidenav{
+    background-color: #111827;
+}
+
+.sidenav li>a li>a>[class*="mdi-"],
+
+.sidenav li>a {
+    color: white;
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    height: 48px;
+    line-height: 48px;
+    padding: 0 32px
 }
 
 #signin-link {
@@ -60,4 +73,231 @@ main{
 
 #profile-link a i {
     font-size: 2.2rem;
+}
+
+/* Home Page */
+.home {
+    height: 100vh;
+}
+
+.layout {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr;
+    gap: 8px;
+}
+
+.layout h1 {
+    font-weight: bolder;
+    color: #a37c40;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.illustration img {
+    flex-grow: 1;
+    width: 25rem;
+}
+
+.floating {
+    animation-name: floating;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    margin-left: 30px;
+    margin-top: 5px;
+}
+
+@keyframes floating {
+    from {
+        transform: translate(0, 0px);
+    }
+
+    65% {
+        transform: translate(0, 15px);
+    }
+
+    to {
+        transform: translate(0, -0px);
+    }
+}
+
+.layout h1 {
+    font-weight: bolder;
+}
+
+.get-started-btn {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+    font-size: 17px;
+    padding: 1em 2.7em;
+    font-weight: 500;
+    background: #1f2937;
+    color: white;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.6em;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+
+.gradient {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    border-radius: 0.6em;
+    margin-top: -0.25em;
+    background-image: linear-gradient(rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 0.3));
+}
+
+.label {
+    position: relative;
+    top: -1px;
+}
+
+.transition {
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    transition-duration: 500ms;
+    background-color: #a37c40;
+    border-radius: 9999px;
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.get-started-btn:hover .transition {
+    width: 14em;
+    height: 14em;
+}
+
+.get-started-btn:active {
+    transform: scale(0.97);
+}
+
+/* Profile Page */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.profile-card {
+    width: -webkit-fill-available;
+    display: flex;
+    justify-content: space-evenly;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-details p {
+    margin: 5px 0;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.head{
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.profile-section {
+    border: 1px solid #ccc;
+    width: -webkit-fill-available;
+    border-radius: 10px;
+}
+
+.upper {
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    gap: 16px;
+}
+
+.img {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.details{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    margin-left: 2rem;
+}
+
+.details p{
+    margin-bottom: 0;
+}
+
+.skills{
+    padding-left: 0.5rem;
+}
+.skills ul {
+    list-style: none;
+    display: ruby-text;
+}
+
+.skills li {
+    margin: 4px;
+}
+
+.profiles{
+    display: ruby;
+}
+
+@media (min-width: 786px) {
+    .layout {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media screen and (max-width: 786px) {
+    .upper {
+        flex-direction: column;
+    }
+
+    .details{
+        margin-left: 0;
+    }
 }

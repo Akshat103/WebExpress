@@ -9,7 +9,7 @@ $(document).ready(function () {
 
 // navbar
 function updateNavbarVisibility() {
-    var tokenExists = checkTokenInCookies();
+    var tokenExists = checkLoggedIn();
     var navbarElements = {
         'home': 'block',
         'profile': tokenExists ? 'block' : 'none',
@@ -21,6 +21,17 @@ function updateNavbarVisibility() {
     });
 }
 
+function checkLoggedIn() {
+    var cookies = document.cookie.split(';');
+    for(var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if(cookie.startsWith("loggedIn=")) {
+            return cookie.substring("loggedIn=".length) === "true";
+        }
+    }
+    return false;
+}
+
 function setElementDisplay(element, display) {
     var desktopLink = document.getElementById(element + '-link');
     var mobileLink = document.getElementById(element + '-link-mobile');
@@ -28,4 +39,20 @@ function setElementDisplay(element, display) {
     desktopLink.style.display = display;
     mobileLink.style.display = display;
 }
+
+function rearrangeLayout() {
+    const layout = document.querySelector('.layout');
+    const text = document.querySelector('.text');
+    const illustration = document.querySelector('.illustration');
+
+    if (window.innerWidth < 786) {
+        layout.insertBefore(illustration, text);
+    } else {
+        layout.insertBefore(text, illustration);
+    }
+}
+
+window.addEventListener('load', rearrangeLayout);
+window.addEventListener('resize', rearrangeLayout);
+
 

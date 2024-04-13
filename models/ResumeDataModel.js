@@ -40,7 +40,8 @@ const resumeSchema = new mongoose.Schema({
   },
   profiles: {
     github: { type: String },
-    linkedin: { type: String }
+    linkedin: { type: String },
+    website: { type: String }
   },
   education: [{
     institution: { type: String, required: [true, 'Institution is required'] },

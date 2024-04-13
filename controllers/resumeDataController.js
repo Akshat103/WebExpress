@@ -1,4 +1,4 @@
-const Resume = require('../models/ResumeData');
+const Resume = require('../models/ResumeDataModel');
 
 // Controller functions
 const formController = {
