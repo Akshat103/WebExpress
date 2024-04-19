@@ -1,248 +1,206 @@
-document.addEventListener('DOMContentLoaded', function () {
-  updateNavbarVisibility();
+// Shorthand event listener for DOMContentLoaded
+document.addEventListener('DOMContentLoaded', updateNavbarVisibility);
+
+const handleFormSubmission = (url, successMessage, successCallback) => {
+  return e => {
+    e.preventDefault();
+    const formData = getDataFromForm();
+    axios.post(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(response => {
+      openModal('Success', successMessage || response.data.message);
+      setTimeout(() => {
+        closeModal();
+        if (successCallback) successCallback();
+      }, 2000);
+    })
+    .catch(error => {
+      openModal('Error', error.message);
+    });
+  };
+};
+
+// Form submission handlers
+const submitStarterForm = handleFormSubmission('/api/add-resume', 'Registration Successful', () => {
+  window.location.href = '/profile';
 });
 
-function addForm(formClass, entryClass, removeClass) {
-  var formContainers = document.querySelectorAll("." + formClass);
-  var lastFormContainer = formContainers[0];
-  var form = lastFormContainer.cloneNode(true);
+const submitUpdateForm = handleFormSubmission('/api/update-details', 'Details Updated Successfully', () => {
+  window.location.href = '/profile';
+});
 
-  var removeButton = document.createElement("button");
-  removeButton.className = "btn " + removeClass;
-  removeButton.setAttribute("type", "button");
-  removeButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
-  removeButton.onclick = function () {
-    this.parentElement.remove();
-  };
+// Attach event listeners
+const getStartedForm = document.getElementById('profileForm');
+const updateForm = document.getElementById('updateResumeForm');
 
-  form.appendChild(removeButton);
-
-  var inputs = form.querySelectorAll("input");
-  inputs.forEach(function (input) {
-    input.value = "";
-  });
-
-  var formContainer = document.querySelector("." + entryClass);
-  formContainer.appendChild(form);
+if (getStartedForm) {
+  getStartedForm.addEventListener('submit', submitStarterForm);
 }
 
-function removeForm(formId) {
-  var form = document.getElementById(formId);
-  form.parentNode.removeChild(form);
+if (updateForm) {
+  updateForm.addEventListener('submit', submitUpdateForm);
 }
 
-function addEducation() {
-  addForm("education-form", "education-entry", "remove-education");
-}
+// Reusable function to add forms
+const addForm = (formClass, entryClass, removeClass, inputs) => {
+    const formContainers = document.querySelectorAll(`.${formClass}`);
+    const lastFormContainer = formContainers[0];
+    const form = lastFormContainer.cloneNode(true);
 
-function removeEducationForm() {
-  removeForm("education-form");
-}
+    const removeButton = document.createElement('button');
+    removeButton.className = `btn ${removeClass}`;
+    removeButton.setAttribute('type', 'button');
+    removeButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+    removeButton.onclick = () => removeButton.parentElement.remove();
 
-function addExperience() {
-  addForm("experience-form", "experience-entry", "remove-experience");
-}
+    form.appendChild(removeButton);
 
-function removeExperienceForm() {
-  removeForm("experience-form");
-}
+    const formInputs = form.querySelectorAll(inputs);
+    formInputs.forEach(input => input.value = '');
 
-function addProject() {
-  addForm("projects-form", "projects-entry", "remove-project");
-}
+    document.querySelector(`.${entryClass}`).appendChild(form);
+};
 
-function removeProjectsForm() {
-  removeForm("projects-form");
-}
+// Function to remove forms
+const removeForm = formId => {
+    const form = document.getElementById(formId);
+    form.parentNode.removeChild(form);
+};
 
-document.addEventListener("DOMContentLoaded", function () {
-  const skillsInput = document.getElementById("skillsInput");
-  const selectedSkills = document.querySelector(".selected-skills");
-  const skillOptions = document.getElementById("skillOptions");
-  const skills = [
-    "C++", "Javascript", "Java", "Python", "React", "NodeJS", "Express",
-    "Flask", "Tensorflow", "Keras", "Hadoop", "MongoDB", "MySQL",
-    "Netlify", "GitHub Pages", "Vercel", "Git", "Databricks", "Sqoop", "Hive"
-  ];
+// Event handlers for adding/removing forms
+const addEducation = () => addForm('education-form', 'education-entry', 'remove-education', '.institution, .year, .degree, .grade');
+const removeEducationForm = () => removeForm('education-form');
+const addExperience = () => addForm('experience-form', 'experience-entry', 'remove-experience', '.employer, .year, .position, .description');
+const removeExperienceForm = () => removeForm('experience-form');
+const addProject = () => addForm('projects-form', 'projects-entry', 'remove-project', '.project-name, .project-tech, .project-description');
+const removeProjectsForm = () => removeForm('projects-form');
 
-  function populateSkillOptions(filteredSkills) {
-    skillOptions.innerHTML = "";
+// Skill management functions
+const skillsInput = document.getElementById('skillsInput');
+const selectedSkills = document.querySelector('.selected-skills');
+const skillOptions = document.getElementById('skillOptions');
+const skills = [
+    'C++', 'Javascript', 'Java', 'Python', 'React', 'NodeJS', 'Express',
+    'Flask', 'Tensorflow', 'Keras', 'Hadoop', 'MongoDB', 'MySQL',
+    'Netlify', 'GitHub Pages', 'Vercel', 'Git', 'Databricks', 'Sqoop', 'Hive',
+];
+
+const populateSkillOptions = filteredSkills => {
+    skillOptions.innerHTML = '';
     filteredSkills.forEach(skill => {
-      const option = document.createElement("option");
-      option.value = skill;
-      skillOptions.appendChild(option);
+        const option = document.createElement('option');
+        option.value = skill;
+        skillOptions.appendChild(option);
     });
-  }
+};
 
-  function isSkillSelected(skill) {
+const isSkillSelected = skill => {
     const selectedSkills = document.querySelectorAll('.selected-skill');
-    for (let i = 0; i < selectedSkills.length; i++) {
-      const textContent = selectedSkills[i].textContent.trim();
-      const extractedSkill = textContent.split('×')[0].trim();
-      if (extractedSkill === skill) {
-        return true;
-      }
-    }
-    return false;
-  }
+    return [...selectedSkills].some(s => s.textContent.trim().split('×')[0].trim() === skill);
+};
 
-  function addSkill(skill) {
+const addSkill = skill => {
     if (!isSkillSelected(skill)) {
-      const selectedSkill = document.createElement("span");
-      selectedSkill.textContent = skill;
-      const removeIcon = document.createElement("span");
-      removeIcon.textContent = " ×";
-      removeIcon.classList.add("remove-icon");
-      selectedSkill.appendChild(removeIcon);
-      selectedSkill.classList.add("selected-skill");
-      removeIcon.addEventListener("click", () => {
-        removeSkill(skill);
-      });
-      selectedSkills.appendChild(selectedSkill);
-      skillsInput.value = "";
-      skillOptions.innerHTML = "";
+        const selectedSkill = document.createElement('span');
+        selectedSkill.textContent = skill;
+        selectedSkill.classList.add('selected-skill');
+        selectedSkills.appendChild(selectedSkill);
+        skillsInput.value = '';
+        skillOptions.innerHTML = '';
+        selectedSkill.addEventListener('click', () => {
+            selectedSkill.remove();
+        });
     }
-  }
+};
 
-  function removeSkill(skill) {
-    const selectedSkills = document.querySelectorAll('.selected-skill');
-    selectedSkills.forEach(selectedSkill => {
-      if (selectedSkill.textContent.includes(skill)) {
-        selectedSkill.remove();
-      }
-    });
-  }
+document.querySelector('.selected-skills').addEventListener('click', event => {
+    if (event.target.classList.contains('selected-skill')) {
+        event.target.remove();
+    }
+});
 
-  skillsInput.addEventListener("input", () => {
+
+skillsInput.addEventListener('input', () => {
     const inputValue = skillsInput.value.toLowerCase();
     const filteredSkills = skills.filter(skill => skill.toLowerCase().includes(inputValue));
     populateSkillOptions(filteredSkills);
-    if (inputValue === "") {
-      skillOptions.innerHTML = "";
-    }
-  });
-
-  skillsInput.addEventListener("change", () => {
-    const selectedSkill = skillsInput.value;
-    if (selectedSkill && skills.includes(selectedSkill)) {
-      addSkill(selectedSkill);
-    }
-  });
-
-  skillsInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      const newSkill = skillsInput.value.trim();
-      if (newSkill !== "") {
-        addSkill(newSkill);
-      }
-    }
-  });
+    if (inputValue === '') skillOptions.innerHTML = '';
 });
 
-function showImageName() {
-  const input = document.getElementById('profile');
-  const imageNameElement = document.getElementById('image-name');
+skillsInput.addEventListener('change', () => {
+    const selectedSkill = skillsInput.value;
+    if (selectedSkill && skills.includes(selectedSkill)) addSkill(selectedSkill);
+});
 
-  if (input.files.length > 0) {
-    const imageName = input.files[0].name;
-    imageNameElement.textContent = `Uploaded: ${imageName}`;
-  } else {
-    imageNameElement.textContent = '';
-  }
-}
-
-function showResumeName() {
-  const fileInput = document.getElementById('resume');
-  const fileName = fileInput.files[0].name;
-  const resumeNameElement = document.getElementById('resume-name');
-  resumeNameElement.textContent = fileName;
-}
-
-const form = document.getElementById("profileForm");
-
-form.addEventListener("submit", submitForm);
-
-function getDataFromForm() {
-  const formData = new FormData();
-
-  // Append form fields to FormData object
-  formData.append("name", document.getElementById("name").value.trim());
-  formData.append("title", document.getElementById("title").value.trim());
-  formData.append("about", document.getElementById("about").value.trim());
-  formData.append("email", document.getElementById("email").value.trim());
-  formData.append("phone", document.getElementById("phone").value.trim());
-  formData.append("profiles[github]", document.getElementById("github-url").value.trim());
-  formData.append("profiles[linkedin]", document.getElementById("linkedin-url").value.trim());
-  formData.append("profiles[website]", document.getElementById("website-url").value.trim());
-
-  // Append uploaded profile image
-  const profileImage = document.getElementById("profile").files[0];
-  if (profileImage) {
-    formData.append("profileImage", profileImage);
-  }
-
-  // Append uploaded resume
-  const resume = document.getElementById("resume").files[0];
-  if (resume) {
-    formData.append("resume", resume);
-  }
-
-  // Append education data
-  const educationEntries = document.querySelectorAll(".education-form");
-  educationEntries.forEach((entry, index) => {
-    formData.append(`education[${index}][institution]`, entry.querySelector(".institution").value.trim());
-    formData.append(`education[${index}][year]`, entry.querySelector(".year").value.trim());
-    formData.append(`education[${index}][degree]`, entry.querySelector(".degree").value.trim());
-    formData.append(`education[${index}][grade]`, entry.querySelector(".grade").value.trim());
-  });
-
-  // Append experience data
-  const experienceEntries = document.querySelectorAll(".experience-form");
-  experienceEntries.forEach((entry, index) => {
-    formData.append(`experience[${index}][employer]`, entry.querySelector(".employer").value.trim());
-    formData.append(`experience[${index}][year]`, entry.querySelector(".year").value.trim());
-    formData.append(`experience[${index}][position]`, entry.querySelector(".position").value.trim());
-    formData.append(`experience[${index}][description]`, entry.querySelector(".description").value.trim());
-  });
-
-  // Append selected skills
-  const selectedSkills = document.querySelectorAll(".selected-skill");
-  selectedSkills.forEach((skill, index) => {
-    formData.append(`skills[${index}]`, skill.textContent.trim().split(" x")[0]);
-  });
-
-  // Append project data
-  const projectEntries = document.querySelectorAll(".projects-form");
-  projectEntries.forEach((entry, index) => {
-    formData.append(`projects[${index}][name]`, entry.querySelector(".project-name").value.trim());
-    formData.append(`projects[${index}][tech]`, entry.querySelector(".project-tech").value.trim());
-    formData.append(`projects[${index}][description]`, entry.querySelector(".project-description").value.trim());
-  });
-
-  return formData;
-}
-
-function submitForm(e) {
-  e.preventDefault();
-  // showLoading();
-
-  const formData = getDataFromForm();
-  console.log(formData)
-  axios.post('/resume', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
+skillsInput.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+        const newSkill = skillsInput.value.trim();
+        if (newSkill !== '') addSkill(newSkill);
     }
-  })
-    .then(response => {
-      // hideLoading();
-      openModal('Registration Successful', response.data.message);
-      setTimeout(() => {
-        closeModal();
-        window.location.href = '/profile';
-      }, 3000);
-    })
-    .catch(error => {
-      // hideLoading();
-      openModal('Registration Unsuccessful', error.message)
+});
+
+// Image and resume name display
+const showImageName = () => {
+    const input = document.getElementById('profile');
+    const imageNameElement = document.getElementById('image-name');
+    imageNameElement.textContent = input.files.length > 0 ? `Uploaded: ${input.files[0].name}` : '';
+};
+
+const showResumeName = () => {
+    const fileInput = document.getElementById('resume');
+    const resumeNameElement = document.getElementById('resume-name');
+    resumeNameElement.textContent = fileInput.files[0].name;
+};
+
+const getDataFromForm = () => {
+    const formData = new FormData();
+
+    formData.append('name', document.getElementById('name').value.trim());
+    formData.append('title', document.getElementById('title').value.trim());
+    formData.append('about', document.getElementById('about').value.trim());
+    formData.append('email', document.getElementById('email').value.trim());
+    formData.append('phone', document.getElementById('phone').value.trim());
+    formData.append('profiles[github]', document.getElementById('github-url').value.trim());
+    formData.append('profiles[linkedin]', document.getElementById('linkedin-url').value.trim());
+    formData.append('profiles[website]', document.getElementById('website-url').value.trim());
+
+    const profileImage = document.getElementById('profile').files[0];
+    if (profileImage) formData.append('profileImage', profileImage);
+
+    const resume = document.getElementById('resume').files[0];
+    if (resume) formData.append('resume', resume);
+
+    document.querySelectorAll('.education-form').forEach((entry, index) => {
+        formData.append(`education[${index}][institution]`, entry.querySelector('.institution').value.trim());
+        formData.append(`education[${index}][year]`, entry.querySelector('.year').value.trim());
+        formData.append(`education[${index}][degree]`, entry.querySelector('.degree').value.trim());
+        formData.append(`education[${index}][grade]`, entry.querySelector('.grade').value.trim());
     });
-}
+
+    document.querySelectorAll('.experience-form').forEach((entry, index) => {
+        formData.append(`experience[${index}][employer]`, entry.querySelector('.employer').value.trim());
+        formData.append(`experience[${index}][year]`, entry.querySelector('.year').value.trim());
+        formData.append(`experience[${index}][position]`, entry.querySelector('.position').value.trim());
+        formData.append(`experience[${index}][description]`, entry.querySelector('.description').value.trim());
+    });
+
+    document.querySelectorAll('.selected-skill').forEach((skill, index) => {
+        console.log(skill.textContent)
+        console.log(skill.textContent.trim())
+        console.log(skill.textContent.trim().replace(/×$/, ''))
+
+        const skillText = skill.textContent.trim().replace(/×$/, '');
+    formData.append(`skills[${index}]`, skillText);
+    });
+
+    document.querySelectorAll('.projects-form').forEach((entry, index) => {
+        formData.append(`projects[${index}][name]`, entry.querySelector('.project-name').value.trim());
+        formData.append(`projects[${index}][tech]`, entry.querySelector('.project-tech').value.trim());
+        formData.append(`projects[${index}][description]`, entry.querySelector('.project-description').value.trim());
+    });
+
+    return formData;
+};

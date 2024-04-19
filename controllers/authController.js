@@ -28,13 +28,9 @@ const authController = {
 
                             await user.save();
                         }
-
-                        const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-                        const lastLogin = new LastLogin({ expiresIn: new Date(Date.now() + 1 * 60 * 60 * 1000), token: token });
+                        const lastLogin = new LastLogin({ expiresIn: new Date(Date.now() + 1 * 60 * 60 * 1000), token: accessToken, user: user.username });
                         await lastLogin.save();
-
-                        return done(null, { user, token });
+                        return done(null, { user, token:accessToken });
                     } catch (err) {
                         console.error(err);
                         return done(err, null);

@@ -52,6 +52,7 @@ const resumeSchema = new mongoose.Schema({
   experience: [{
     employer: { type: String },
     position: { type: String },
+    year: { type: String },
     description: { type: String },
   }],
   skills: [{ type: String, required: [true, 'At least one skill is required'] }],

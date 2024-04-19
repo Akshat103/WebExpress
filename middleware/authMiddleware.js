@@ -7,7 +7,6 @@ const authenticateToken = async (req, res, next) => {
         if (req.headers.cookie === undefined) {
             return res.status(401).redirect('/auth/github');
         }
-
         const cookieString = req.headers.cookie;
         const cookies = cookieString.split('; ').reduce((prev, current) => {
             const [name, value] = current.split('=');
@@ -30,8 +29,7 @@ const authenticateToken = async (req, res, next) => {
                 return res.redirect('/auth/github');
             }
 
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            const username = decoded.username;
+            const username = lastLogin.user;
 
             const UserResume = Resume.findOne({ user: username });
             let resume;

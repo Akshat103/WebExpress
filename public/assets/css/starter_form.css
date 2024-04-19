@@ -137,6 +137,7 @@ option {
     padding: 10px;
     border-radius: 5px;
     margin-top: 10px;
+    cursor: pointer;
 }
 
 /* Selected skill */
@@ -205,6 +206,13 @@ option {
 .file-name{
     font-size: 0.8rem;
     margin: 1rem;
+}
+
+#profile-image{
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
 /* Media query for smaller screens */

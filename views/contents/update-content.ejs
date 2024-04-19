@@ -1,0 +1,170 @@
+<!-- Form content goes here -->
+<div class="form-content container">
+  <form id="updateResumeForm">
+
+    <h5>Update Your Details</h5>
+    <div class="row doc-upload">
+      <div class="col s6">
+        <div class="profile-image">
+          <label for="profile" class="upload-button"><img id="profile-image" src="<%= resume.profileImage %>"
+              alt="Profile Image" class="rounded-image"></label>
+          <input id="profile" type="file" accept="image/*" class="hidden" onchange="showImageName()">
+          <p id="image-name" class="file-name"></p>
+        </div>
+      </div>
+      <div class="col s6">
+        <div class="resume-doc">
+          <p><strong>
+              <a href="<%= resume.resume %>">Resume</a></strong>
+          </p>
+          <label for="resume" class="upload-button dark-theme">Upload New Resume</label>
+          <input id="resume" type="file" accept=".doc, .docx, .pdf" class="hidden" onchange="showResumeName()">
+          <p id="resume-name" class="file-name"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row name-title-entry">
+      <div class="col s6">
+        <input id="name" type="text" class="validate" value="<%= resume.name %>" required>
+        <label for="name">Full Name</label>
+      </div>
+      <div class="col s6">
+        <input id="title" type="text" class="validate" value="<%= resume.title %>" required>
+        <label for="title">Job Title</label>
+      </div>
+    </div>
+
+    <div class="row about-entry">
+      <div class="col s12">
+        <input id="about" type="text" class="validate" value="<%= resume.about %>" required>
+        <label for="about">About You</label>
+      </div>
+    </div>
+
+    <div class="row contact-entry">
+      <div class="col s6">
+        <input id="email" type="email" class="validate" value="<%= resume.email %>" required>
+        <label for="email">Email</label>
+      </div>
+      <div class="col s6">
+        <input id="phone" type="tel" class="validate" value="<%= resume.phone %>">
+        <label for="phone">Contact Number</label>
+      </div>
+    </div>
+
+    <div class="row profiles-entry">
+      <p>Profiles</p>
+      <div class="col s3">
+        <input id="github-url" type="url" class="validate" value="<%= resume.profiles.github %>">
+        <label for="github-url"> <i class="fa-brands fa-github"></i> GitHub</label>
+      </div>
+      <div class="col s3">
+        <input id="linkedin-url" type="url" class="validate" value="<%= resume.profiles.linkedin %>">
+        <label for="linkedin-url"> <i class="fa-brands fa-linkedin"></i> LinkedIn</label>
+      </div>
+      <div class="col s3">
+        <input id="website-url" type="url" class="validate" value="<%= resume.profiles.website %>">
+        <label for="website-url"> <i class="fa-solid fa-blog"></i> Website</label>
+      </div>
+    </div>
+
+    <div class="row education-entry">
+      <p>Education</p>
+      <% resume.education.forEach((education, index)=> { %>
+        <div class="education-entry">
+          <div class="education-form">
+            <div class="col s6">
+              <input class="institution" type="text" value="<%= education.institution %>" required>
+              <label for="institution">Institution</label>
+            </div>
+            <div class="col s6">
+              <input class="year" type="text" value="<%= education.year %>" required>
+              <label for="year">Year</label>
+            </div>
+            <div class="col s6">
+              <input class="degree" type="text" value="<%= education.degree %>" required>
+              <label for="degree">Degree</label>
+            </div>
+            <div class="col s6">
+              <input class="grade" type="text" value="<%= education.grade %>" required>
+              <label for="grade">Grade</label>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+          <button id="add-education" onclick="addEducation()" class="btn" type="button"><i class="fa-solid fa-plus"></i>
+            Add
+            Education</button>
+    </div>
+
+    <div class="row experience-entry">
+      <p>Experience</p>
+      <% resume.experience.forEach((experience, index)=> { %>
+        <div class="experience-entry">
+          <div class="experience-form">
+            <div class="col s6">
+              <input class="employer" type="text" value="<%= experience.employer %>">
+              <label for="employer">Employer</label>
+            </div>
+            <div class="col s6">
+              <input class="year" type="text" value="<%= experience.year %>">
+              <label for="year">Year</label>
+            </div>
+            <div class="col s6">
+              <input class="position" type="text" value="<%= experience.position %>">
+              <label for="position">Position</label>
+            </div>
+            <div class="col s6">
+              <input class="description" type="text" value="<%= experience.description %>">
+              <label for="description">Description</label>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+          <button id="add-experience" onclick="addExperience()" class="btn" type="button"><i
+              class="fa-solid fa-plus"></i> Add
+            Experience</button>
+    </div>
+
+    <div class="row skills-entry">
+      <p>Skills</p>
+      <input id="skillsInput" type="text" list="skillOptions" placeholder="Start typing to select a skill">
+      <datalist id="skillOptions"></datalist>
+      <div class="selected-skills">
+        <% resume.skills.forEach(skill=> { %>
+          <span class="selected-skill">
+            <%= skill %><span class="remove-icon"></span>
+          </span>
+          <% }); %>
+      </div>
+    </div>
+
+    <div class="row projects-entry">
+      <p>Projects</p>
+      <% resume.projects.forEach((project, index)=> { %>
+        <div class="projects-entry">
+          <div class="projects-form">
+            <div class="col s6">
+              <input class="project-name" type="text" value="<%= project.name %>" required>
+              <label for="project-name">Project Name</label>
+            </div>
+            <div class="col s6">
+              <input class="project-tech" type="text" value="<%= project.tech.join(', ') %>" required>
+              <label for="project-tech">Technologies Used</label>
+            </div>
+            <div class="col s12">
+              <input class="project-description" type="text" value="<%= project.description %>" required>
+              <label for="project-description">Description</label>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+          <button id="add-project" onclick="addProject()" class="btn" type="button"><i class="fa-solid fa-plus"></i>
+            Add
+            Project</button>
+    </div>
+
+    <button class="btn waves-effect waves-light" type='submit'>Submit<i class="material-icons right">send</i></button>
+</form>
+</div>

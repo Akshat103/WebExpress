@@ -2,47 +2,114 @@ const Resume = require('../models/ResumeDataModel');
 
 // Controller functions
 const formController = {
-  index: (req, res) => {
-    if (!req.userData.resume) res.render('form');
-    else res.redirect('/profile');
-  }
-};
+  index: async (req, res) => {
+    try{
+      const resume = await Resume.findOne({ user: req.userData.username });
+      if (!resume) res.render('form');
+      else res.redirect('/profile');
+    }
+    catch{
+      console.error(err);
+      res.render('error');
+    }
+  },
 
-const createResume = async (req, res) => {
-  try {
-    const { username } = req.userData;
-    const resume = req.body;
-    const profileImageURI = req.files[0].path.split("public")[1];
-    const resumeURI = req.files[1].path.split("public")[1];
-    const combinedData = {
-      user: username,
-      profileImage: profileImageURI,
-      resume: resumeURI,
-      ...resume
-    };
-    const newResume = new Resume(combinedData);
-    newResume.save()
-      .then(savedResume => {
-        const message = 'Resume created successfully';
-        res.status(201).json({ message });
-      })
-      .catch(error => {
-        if (error.name === 'ValidationError') {
-          const validationErrors = {};
-          for (const field in error.errors) {
-            validationErrors[field] = error.errors[field].message;
+  updatePage: async (req, res) => {
+    try {
+      const username = req.userData.username;
+      const resume = await Resume.findOne({ user: username });
+      if (resume) {
+        res.render('update', { resume });
+      }
+      else {
+        let message = "Data not found !!!";
+        res.render('error', { message });
+      }
+    } catch (err) {
+      console.error(err);
+      res.render('error');
+    }
+  },
+
+  updateResume: async (req, res) => {
+    try {
+      const { username } = req.userData;
+      const resumeData = req.body;
+      let profileImageURI;
+      let resumeURI;
+      let updatedData = { ...resumeData };
+      
+      if (req.files && req.files.length > 0) {
+          if (req.files[0] && req.files[0].path.split("public")[1]) {
+              profileImageURI = req.files[0].path.split("public")[1];
+              updatedData.profileImage = profileImageURI;
           }
-          res.status(400).json({ message: 'Validation failed', errors: validationErrors });
-        } else {
-          console.error('Error creating/updating resume:', error);
-          res.status(500).json({ message: error.message });
-        }
-      });
+          if (req.files[1] && req.files[1].path.split("public")[1]) {
+              resumeURI = req.files[1].path.split("public")[1];
+              updatedData.resume = resumeURI;
+          }
+      }
+      const updatedResume = await Resume.findOneAndUpdate({ user: username }, updatedData, { new: true });
+      
+      if (!updatedResume) {
+        let message = "Resume not found !!!";
+        res.status(404).render('error', { message });
+      }
 
-  } catch (error) {
-    let message = error.name;
-    res.render('error', { message });
+      const message = 'Resume updated successfully';
+      res.status(200).json({ message });
+
+    } catch (error) {
+      if (error.name === 'ValidationError') {
+        const validationErrors = {};
+        for (const field in error.errors) {
+          validationErrors[field] = error.errors[field].message;
+        }
+        res.status(400).json({ message: 'Validation failed', errors: validationErrors });
+      } else {
+        console.error('Error updating resume:', error);
+        res.status(500).json({ message: error.message });
+      }
+    }
+  },
+
+  createResume: async (req, res) => {
+    try {
+      const { username } = req.userData;
+      const resume = req.body;
+      const profileImageURI = req.files[0].path.split("public")[1];
+      const resumeURI = req.files[1].path.split("public")[1];
+      const combinedData = {
+        user: username,
+        profileImage: profileImageURI,
+        resume: resumeURI,
+        ...resume
+      };
+      const newResume = new Resume(combinedData);
+      newResume.save()
+        .then(savedResume => {
+          const message = 'Resume created successfully';
+          res.status(201).json({ message });
+        })
+        .catch(error => {
+          if (error.name === 'ValidationError') {
+            const validationErrors = {};
+            for (const field in error.errors) {
+              validationErrors[field] = error.errors[field].message;
+            }
+            res.status(400).json({ message: 'Validation failed', errors: validationErrors });
+          } else {
+            console.error('Error creating/updating resume:', error);
+            res.status(500).json({ message: error.message });
+          }
+        });
+  
+    } catch (error) {
+      console.log(error)
+      let message = error.name;
+      res.render('error', { message });
+    }
   }
 };
 
-module.exports = { createResume, formController };
+module.exports = { formController };

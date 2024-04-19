@@ -15,6 +15,7 @@ destinationFolders.forEach(folder => {
 // Multer configuration
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
+      console.log(file)
       let destinationFolder;
       if (file.fieldname === 'profileImage') {
         destinationFolder = 'public/uploads/userProfiles';

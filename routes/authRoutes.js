@@ -42,13 +42,11 @@ router.get('/github/callback', (req, res, next) => {
         if (!user) {
             return res.redirect('/error');
         }
-
         req.logIn(user, (loginErr) => {
             if (loginErr) {
                 console.error(loginErr);
                 return res.redirect('/error');
             }
-
             res.cookie('token', token, { httpOnly: true });
             res.send(`
     <script>
