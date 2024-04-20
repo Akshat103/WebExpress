@@ -51,20 +51,27 @@ const formController = {
       let updatedData = { ...resumeData };
 
       if (req.files && req.files.length > 0) {
-        if (req.files[0] && req.files[0].path.split("public")[1]) {
-          profileImageURI = req.files[0].path.split("public")[1];
+        for (var file of req.files) {
+          if (file.fieldname === 'profileImage') {
+            profileImageURI = await uploadToAzureStorage(file);
+          } else if (file.fieldname === 'resume') {
+            resumeURI = await uploadToAzureStorage(file);
+          }
+        }
+
+        if (profileImageURI) {
           updatedData.profileImage = profileImageURI;
         }
-        if (req.files[1] && req.files[1].path.split("public")[1]) {
-          resumeURI = req.files[1].path.split("public")[1];
+        if (resumeURI) {
           updatedData.resume = resumeURI;
         }
       }
+
       const updatedResume = await Resume.findOneAndUpdate({ user: username }, updatedData, { new: true });
 
       if (!updatedResume) {
         let message = "Resume not found !!!";
-        res.status(404).render('error', { message });
+        return res.status(404).render('error', { message });
       }
 
       const message = 'Resume updated successfully';
