@@ -13,7 +13,6 @@ const authenticateToken = async (req, res, next) => {
             prev[name] = value;
             return prev;
         }, {});
-        
         const token = cookies.token;
         try {
             const lastLogin = await LastLogin.findOne({ token });

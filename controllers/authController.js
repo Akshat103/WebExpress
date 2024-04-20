@@ -30,7 +30,7 @@ const authController = {
                         }
                         const lastLogin = new LastLogin({ expiresIn: new Date(Date.now() + 1 * 60 * 60 * 1000), token: accessToken, user: user.username });
                         await lastLogin.save();
-                        return done(null, { user, token:accessToken });
+                        return done(null, { user, token: accessToken });
                     } catch (err) {
                         console.error(err);
                         return done(err, null);

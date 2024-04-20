@@ -30,11 +30,7 @@ app.use(session({
     store: new RedisStore({ client: redisClient }),
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: false,
-        maxAge: 3600000,
-    },
+    saveUninitialized: false
 }));
 
 app.use('/', homeRoutes);

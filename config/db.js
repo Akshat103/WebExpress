@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 const redis = require('redis');
 
 const redisClient = redis.createClient({
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
+  url: process.env.REDIS_URL
 });
 
 redisClient.connect().catch(console.error);
@@ -18,4 +17,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = {connectDB, redisClient};
+module.exports = { connectDB, redisClient };
