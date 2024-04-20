@@ -15,7 +15,18 @@
         <div class="profile-section">
             <div class="upper">
                 <div class="img">
-                    <img class="profile-img" src="<%= resume.profileImage %>" alt="Profile Image">
+                    <img style="
+                  width: 160px;
+                  height: 160px;
+                  border-radius: 50%;
+                  overflow: hidden;
+                  display: block;
+                  margin: 0 auto;
+                  box-shadow: 0 0 0 5px black;
+                  margin-bottom: 30px;
+                  filter: brightness(110%) contrast(110%) blur(0.5px);
+                  object-fit: cover;"
+                 src="<%= user.photos %>" alt="">
                 </div>
                 <div class="details">
                     <p><strong>Email:</strong>
@@ -92,7 +103,7 @@
                 </div>
             </section>
         </div>
-        <button class="update-button" onclick="window.location.href='/update-details'">
+        <button  style="margin-top: 20px; height: 40px" class="update-button" onclick="window.location.href='/update-details'">
             <svg class="svg-icon" fill="none" height="20" viewBox="0 0 20 20" width="20"
                 xmlns="http://www.w3.org/2000/svg">
                 <g stroke="#ff342b" stroke-linecap="round" stroke-width="1.5">
