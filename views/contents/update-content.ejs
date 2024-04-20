@@ -17,7 +17,9 @@
           <p><strong>
               <a href="<%= resume.resume %>">Resume</a></strong>
           </p>
-          <label for="resume" class="upload-button dark-theme">Upload New Resume</label>
+          <label for="resume" class="upload-button dark-theme" style="display: inline-block;">
+            <span style="overflow-wrap: anywhere; white-space: nowrap; text-align: center;">Upload Your Resume</span>
+          </label>
           <input id="resume" type="file" accept=".doc, .docx, .pdf" class="hidden" onchange="showResumeName()">
           <p id="resume-name" class="file-name"></p>
         </div>

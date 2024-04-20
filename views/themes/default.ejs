@@ -24,8 +24,21 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav"> <a
             class="navbar-brand js-scroll-trigger" href="#page-top"> <span class="d-block d-lg-none">
                 <%= resumeData.name %>
-            </span> <span class="d-none d-lg-block"> <img class="profile-img mx-auto mb-2"
-                    src="<%= resumeData.profileImage %>" alt=""> </span> </a>
+            </span><span class="d-none d-lg-block">
+                <img style="
+                  width: 160px;
+                  height: 160px;
+                  border-radius: 50%;
+                  overflow: hidden;
+                  display: block;
+                  margin: 0 auto;
+                  box-shadow: 0 0 0 5px black;
+                  margin-bottom: 30px;
+                  filter: brightness(110%) contrast(110%) blur(0.5px);
+                  object-fit: cover;
+                " src="<%= resumeData.profileImage %>" alt="">
+              </span>
+               </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span
                 class="navbar-toggler-icon"></span> </button>
@@ -39,18 +52,30 @@
             </ul>
         </div>
     </nav>
-    <div class="container-fluid p-0" id="about">
-        <div class="profile-image-container d-lg-none text-center mt-4">
-            <img class="profile-img" src="<%= resumeData.profileImage %>" alt="">
-        </div>
+    
+    
+    <div class="container-fluid p-0">
 
-        <section class="resume-section p-3 p-lg-5 d-flex d-column">
+        <!-- Profile Photo -->
+        <div class="profile-image-container d-lg-none text-center mt-4">
+          <div style="width: 160px; height: 160px; border-radius: 50%; overflow: hidden; display: flex; justify-content: center; align-items: center; margin: 0 auto; box-shadow: 0 0 0 5px black;">
+            <img class="img-fluid img-profile mx-auto" src="<%= resumeData.profileImage %>" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+        </div>
+      </div>
+        
+        
+
+        <section class="resume-section p-3 p-lg-5 d-flex d-column" id="about">
             <div class="my-auto">
                 <h1 class="mb-0"><span class="text-primary">
                         <%= resumeData.name %>
                     </span> </h1>
+                <h4 class="mb-0"><span class="text-primary">
+                        <%= resumeData.title %>
+                    </span> </h1>
                 <div class="subheading mb-0">
-                    <%= resumeData.title %> <a href="mailto:<%= resumeData.email %>">
+                     <a href="mailto:<%= resumeData.email %>">
                             <%= resumeData.email %>
                         </a>
                 </div>
@@ -75,7 +100,7 @@
                 </ul>
             </div>
         </section>
-
+                                                    
         <!-- Education -->
         <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="education">
             <div class="my-auto">
@@ -125,16 +150,25 @@
         <!-- Skills -->
         <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="skills">
             <div class="my-auto">
-                <h2 class="mb-5">Skills</h2>
-                <ul class="list-inline list-icons">
-                    <% resumeData.skills.forEach(function(skill) { %>
-                        <li class="list-inline-item">
-                            <%= skill %>
-                        </li>
-                        <% }); %>
-                </ul>
+              <h2 class="mb-5">Skills</h2>
+              <div style="display: flex; flex-wrap: wrap;">
+                <% let skillsChunks = []; %>
+                <% for (let i = 0; i < resumeData.skills.length; i += 5) { %>
+                  <% skillsChunks.push(resumeData.skills.slice(i, i + 5)); %>
+                <% } %>
+                <% skillsChunks.forEach(skillChunk => { %>
+                  <div class="skills-row">
+                    <% skillChunk.forEach(skill => { %>
+                    <div style=" height: 24px;display: flex;align-items: center;justify-content: center;padding: 5px;box-sizing: border-box;margin-right: 10px;margin-bottom: 10px;background-color: #f0f0f0;border-radius: 4px;min-width: calc(1ch + 2px);"
+                    ><%= skill %>
+                    </div>
+                    <% }); %>
+                  </div>
+                <% }); %>
+              </div>
             </div>
-        </section>
+          </section>
+        
 
         <!-- Projects -->
         <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="project">

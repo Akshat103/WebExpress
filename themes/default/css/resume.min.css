@@ -1,0 +1,41 @@
+.profile-image-round {
+width: 160px; /* Adjust the size as needed */
+height: 160px;
+border-radius: 50%;
+overflow: hidden;
+display: flex;
+justify-content: center;
+align-items: center;
+margin: 0 auto;
+}
+
+.profile-image-round img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+.skills-container {
+display: flex;
+flex-wrap: wrap;
+}
+
+.skills-row {
+display: flex;
+flex-wrap: wrap;
+width: 100%;
+}
+
+.skills-items {
+height: 24px;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 5px;
+box-sizing: border-box;
+margin-right: 10px;
+margin-bottom: 10px;
+background-color: #f0f0f0;
+border-radius: 4px;
+min-width: calc(1ch + 2px);
+}
