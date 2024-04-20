@@ -1,14 +1,25 @@
 const Resume = require('../models/ResumeDataModel');
+const { containerClient } = require('../config/azureStorage');
+const upload = require('../config/multerConfig');
+
+// Function to upload file to Azure Storage
+async function uploadToAzureStorage(file) {
+  const blobName = `${Date.now()}-${file.originalname}`;
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+  const uploadBlobResponse = await blockBlobClient.uploadData(file.buffer);
+  return blockBlobClient.url;
+}
 
 // Controller functions
 const formController = {
+
   index: async (req, res) => {
-    try{
+    try {
       const resume = await Resume.findOne({ user: req.userData.username });
       if (!resume) res.render('form');
       else res.redirect('/profile');
     }
-    catch{
+    catch {
       console.error(err);
       res.render('error');
     }
@@ -38,19 +49,19 @@ const formController = {
       let profileImageURI;
       let resumeURI;
       let updatedData = { ...resumeData };
-      
+
       if (req.files && req.files.length > 0) {
-          if (req.files[0] && req.files[0].path.split("public")[1]) {
-              profileImageURI = req.files[0].path.split("public")[1];
-              updatedData.profileImage = profileImageURI;
-          }
-          if (req.files[1] && req.files[1].path.split("public")[1]) {
-              resumeURI = req.files[1].path.split("public")[1];
-              updatedData.resume = resumeURI;
-          }
+        if (req.files[0] && req.files[0].path.split("public")[1]) {
+          profileImageURI = req.files[0].path.split("public")[1];
+          updatedData.profileImage = profileImageURI;
+        }
+        if (req.files[1] && req.files[1].path.split("public")[1]) {
+          resumeURI = req.files[1].path.split("public")[1];
+          updatedData.resume = resumeURI;
+        }
       }
       const updatedResume = await Resume.findOneAndUpdate({ user: username }, updatedData, { new: true });
-      
+
       if (!updatedResume) {
         let message = "Resume not found !!!";
         res.status(404).render('error', { message });
@@ -77,8 +88,8 @@ const formController = {
     try {
       const { username } = req.userData;
       const resume = req.body;
-      const profileImageURI = req.files[0].path.split("public")[1];
-      const resumeURI = req.files[1].path.split("public")[1];
+      const profileImageURI = await uploadToAzureStorage(req.files[0]);
+      const resumeURI = await uploadToAzureStorage(req.files[1]);
       const combinedData = {
         user: username,
         profileImage: profileImageURI,
@@ -103,7 +114,6 @@ const formController = {
             res.status(500).json({ message: error.message });
           }
         });
-  
     } catch (error) {
       console.log(error)
       let message = error.name;
