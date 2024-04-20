@@ -208,10 +208,16 @@ body {
 }
 
 .profile-img {
-    width: 100px;
-    height: 100px;
+    width: 10rem;
+    height: 10rem;
     border-radius: 50%;
-    margin-bottom: 10px;
+    overflow: hidden;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 0 0 5px black;
+    margin-bottom: 30px;
+    filter: brightness(110%) contrast(110%) blur(0.5px);
+    object-fit: cover;
 }
 
 .profile-details {
@@ -307,7 +313,7 @@ body {
 
 .update-txt {
     line-height: 1.25rem;
-    font-size: 1.0625rem; 
+    font-size: 1.0625rem;
     color: #FF342B;
     font-family: sans-serif;
     letter-spacing: 0.0625rem;
