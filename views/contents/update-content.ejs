@@ -3,6 +3,7 @@
   <form id="updateResumeForm">
 
     <h5>Update Your Details</h5>
+
     <div class="row doc-upload">
       <div class="col s6">
         <div class="profile-image">
@@ -26,7 +27,7 @@
       </div>
     </div>
 
-    <div class="row name-title-entry">
+    <div class="row name-title">
       <div class="col s6">
         <input id="name" type="text" class="validate" value="<%= resume.name %>" required>
         <label for="name">Full Name</label>
@@ -37,14 +38,14 @@
       </div>
     </div>
 
-    <div class="row about-entry">
+    <div class="row">
       <div class="col s12">
         <input id="about" type="text" class="validate" value="<%= resume.about %>" required>
         <label for="about">About You</label>
       </div>
     </div>
 
-    <div class="row contact-entry">
+    <div class="row contact">
       <div class="col s6">
         <input id="email" type="email" class="validate" value="<%= resume.email %>" required>
         <label for="email">Email</label>
@@ -75,23 +76,23 @@
       <p>Education</p>
       <% resume.education.forEach((education, index)=> { %>
         <div class="education-entry">
-          <div class="education-form">
-            <div class="col s6">
-              <input class="institution" type="text" value="<%= education.institution %>" required>
-              <label for="institution">Institution</label>
-            </div>
-            <div class="col s6">
-              <input class="year" type="text" value="<%= education.year %>" required>
-              <label for="year">Year</label>
-            </div>
-            <div class="col s6">
-              <input class="degree" type="text" value="<%= education.degree %>" required>
-              <label for="degree">Degree</label>
-            </div>
-            <div class="col s6">
-              <input class="grade" type="text" value="<%= education.grade %>" required>
-              <label for="grade">Grade</label>
-            </div>
+            <div class="education-form">
+              <div class="col s6">
+                <input class="institution" type="text" value="<%= education.institution %>" required>
+                <label for="institution">Institution</label>
+              </div>
+              <div class="col s6">
+                <input class="year" type="text" value="<%= education.year %>" required>
+                <label for="year">Year</label>
+              </div>
+              <div class="col s6">
+                <input class="degree" type="text" value="<%= education.degree %>" required>
+                <label for="degree">Degree</label>
+              </div>
+              <div class="col s6">
+                <input class="grade" type="text" value="<%= education.grade %>" required>
+                <label for="grade">Grade</label>
+              </div>
           </div>
         </div>
         <% }) %>
