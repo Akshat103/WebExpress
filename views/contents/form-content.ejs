@@ -16,35 +16,38 @@
           <label for="resume" class="upload-button dark-theme">Upload Resume</label>
           <input id="resume" type="file" accept=".doc, .docx, .pdf" class="hidden" onchange="showResumeName()">
           <p id="resume-name" class="file-name"></p>
-      </div>      
+        </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col s6">
-        <input id="name" type="text" class="validate" required>
+        <input id="name" type="text" class="validate input" required>
         <label for="name">Full Name</label>
       </div>
       <div class="col s6">
-        <input id="title" type="text" class="validate" required>
+        <input id="title" type="text" class="validate input" required>
         <label for="title">Job Title</label>
       </div>
     </div>
     <div class="row">
       <div class="col s12">
-        <input id="about" type="text" class="validate" required>
+        <input id="about" type="text" class="validate input-sentence" required>
         <label for="about">About You</label>
       </div>
     </div>
 
     <div class="row">
       <div class="col s6">
-        <input id="email" type="email" class="validate" required>
+        <input id="email" type="email" class="validate" required
+          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
         <label for="email">Email</label>
+        <span class="helper-text" data-error="Invalid email format"></span>
       </div>
       <div class="col s6">
-        <input id="phone" type="tel" class="validate">
+        <input id="phone" type="tel" class="validate" pattern="[0-9]{10}">
         <label for="phone">Contact Number</label>
+        <span class="helper-text" data-error="Invalid phone number format (10 digits)"></span>
       </div>
     </div>
 
@@ -53,14 +56,17 @@
       <div class="col s3">
         <input id="github-url" type="url" class="validate">
         <label for="github-url"> <i class="fa-brands fa-github"></i> GitHub</label>
+        <span class="helper-text" data-error="Invalid GitHub URL format"></span>
       </div>
       <div class="col s3">
         <input id="linkedin-url" type="url" class="validate">
         <label for="linkedin-url"> <i class="fa-brands fa-linkedin"></i> LinkedIn</label>
+        <span class="helper-text" data-error="Invalid LinkedIn URL format"></span>
       </div>
       <div class="col s3">
         <input id="website-url" type="url" class="validate">
         <label for="website-url"> <i class="fa-solid fa-blog"></i> Website</label>
+        <span class="helper-text" data-error="Invalid Website URL format"></span>
       </div>
     </div>
 
@@ -69,15 +75,15 @@
       <div class="education-entry">
         <div class="education-form">
           <div class="col s6">
-            <input class="institution" type="text" required>
+            <input class="institution input" type="text" required>
             <label for="institution">Institution</label>
           </div>
           <div class="col s6">
-            <input class="year" type="text" required>
+            <input class="year" type="number" required>
             <label for="year">Year</label>
           </div>
           <div class="col s6">
-            <input class="degree" type="text" required>
+            <input class="degree input" type="text" required>
             <label for="degree">Degree</label>
           </div>
           <div class="col s6">
@@ -85,7 +91,7 @@
             <label for="grade">Grade</label>
           </div>
         </div>
-      </div>
+      </div>      
       <button id="add-education" onclick="addEducation()" class="btn" type="button"><i class="fa-solid fa-plus"></i> Add
         Education</button>
     </div>
@@ -95,19 +101,19 @@
       <div class="experience-entry">
         <div class="experience-form">
           <div class="col s6">
-            <input class="employer" type="text">
+            <input class="employer input" type="text">
             <label for="employer">Employer</label>
           </div>
           <div class="col s6">
-            <input class="year" type="text">
+            <input class="year" type="number" required>
             <label for="year">Year</label>
           </div>
           <div class="col s6">
-            <input class="position" type="text">
+            <input class="position input" type="text">
             <label for="position">Position</label>
           </div>
           <div class="col s6">
-            <input class="description" type="text">
+            <input class="description input-sentence" type="text">
             <label for="description">Description</label>
           </div>
         </div>
@@ -118,7 +124,7 @@
 
     <div class="row">
       <p>Skills</p>
-      <input id="skillsInput" type="text" list="skillOptions" placeholder="Start typing to select a skill">
+      <input id="skillsInput" class="input" type="text" list="skillOptions" placeholder="Start typing to select a skill">
       <datalist id="skillOptions"></datalist>
       <div class="selected-skills"></div>
     </div>
@@ -128,15 +134,15 @@
       <div class="projects-entry">
         <div class="projects-form">
           <div class="col s6">
-            <input class="project-name" type="text" required>
+            <input class="project-name input" type="text" required>
             <label for="project-name">Project Name</label>
           </div>
           <div class="col s6">
-            <input class="project-tech" type="text" required>
+            <input class="project-tech input" type="text" required>
             <label for="project-tech">Technologies Used</label>
           </div>
           <div class="col s12">
-            <input class="project-description" type="text" required>
+            <input class="project-description input-sentence" type="text" required>
             <label for="project-description">Description</label>
           </div>
         </div>
@@ -144,7 +150,6 @@
       <button id="add-project" onclick="addProject()" class="btn" type="button"><i class="fa-solid fa-plus"></i> Add
         Project</button>
     </div>
-    <button class="btn waves-effect waves-light" type='submit'>Submit<i
-        class="material-icons right">send</i></button>
+    <button class="btn waves-effect waves-light" type='submit'>Submit<i class="material-icons right">send</i></button>
   </form>
 </div>
