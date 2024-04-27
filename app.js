@@ -1,10 +1,10 @@
 const express = require('express');
-const { connectDB, redisClient } = require('./config/db');
 const dotenv = require('dotenv');
-const path = require('path');
-const session = require('express-session');
-const RedisStore = require('connect-redis').default;
 dotenv.config();
+const session = require('express-session');
+const { connectDB } = require('./config/mongoDb');
+const {connectRedis} = require('./config/redisDb');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -13,10 +13,16 @@ const PORT = process.env.PORT || 8000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
 app.set('view engine', 'ejs');
 
 // Connect to MongoDB
 connectDB();
+connectRedis();
 
 // Routes
 const homeRoutes = require('./routes/homeRoutes');
@@ -26,18 +32,11 @@ const resumeDataRoutes = require('./routes/resumeDataRoutes');
 const errorRoutes = require('./routes/errorRoutes');
 const siteRoutes = require('./routes/siteRoutes');
 
-app.use(session({
-    store: new RedisStore({ client: redisClient }),
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false
-}));
-
 app.use('/', homeRoutes);
-app.use('/profile', profileRoutes);
+app.use('/', profileRoutes);
 app.use('/auth', authRoutes);
 app.use('/', resumeDataRoutes);
-app.use('/error', errorRoutes);
+app.use('/', errorRoutes);
 app.use('/', siteRoutes);
 
 // Handle undefined routes (404)

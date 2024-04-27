@@ -76,23 +76,23 @@
       <p>Education</p>
       <% resume.education.forEach((education, index)=> { %>
         <div class="education-entry">
-            <div class="education-form">
-              <div class="col s6">
-                <input class="institution" type="text" value="<%= education.institution %>" required>
-                <label for="institution">Institution</label>
-              </div>
-              <div class="col s6">
-                <input class="year" type="text" value="<%= education.year %>" required>
-                <label for="year">Year</label>
-              </div>
-              <div class="col s6">
-                <input class="degree" type="text" value="<%= education.degree %>" required>
-                <label for="degree">Degree</label>
-              </div>
-              <div class="col s6">
-                <input class="grade" type="text" value="<%= education.grade %>" required>
-                <label for="grade">Grade</label>
-              </div>
+          <div class="education-form">
+            <div class="col s6">
+              <input class="institution" type="text" value="<%= education.institution %>" required>
+              <label for="institution">Institution</label>
+            </div>
+            <div class="col s6">
+              <input class="year" type="text" value="<%= education.year %>" required>
+              <label for="year">Year</label>
+            </div>
+            <div class="col s6">
+              <input class="degree" type="text" value="<%= education.degree %>" required>
+              <label for="degree">Degree</label>
+            </div>
+            <div class="col s6">
+              <input class="grade" type="text" value="<%= education.grade %>" required>
+              <label for="grade">Grade</label>
+            </div>
           </div>
         </div>
         <% }) %>
@@ -169,5 +169,5 @@
     </div>
 
     <button class="btn waves-effect waves-light" type='submit'>Submit<i class="material-icons right">send</i></button>
-</form>
+  </form>
 </div>

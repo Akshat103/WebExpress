@@ -6,6 +6,6 @@ const router = express.Router();
 const errorController = require('../controllers/errorController');
 
 // Define routes
-router.get('/', errorController.index);
+router.get('/error', errorController.index);
 
 module.exports = router;

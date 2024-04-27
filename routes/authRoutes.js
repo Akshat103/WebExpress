@@ -55,7 +55,7 @@ router.get('/github/callback', (req, res, next) => {
         document.cookie = "loggedIn=true; expires=" + expirationDate.toUTCString() + "; path=/";
         window.location.href = "/";
     </script>
-`);
+                    `);
 
         });
     })(req, res, next);

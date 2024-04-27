@@ -1,8 +1,7 @@
-const jwt = require('jsonwebtoken');
-const passport = require('passport');
 const GitHubStrategy = require('passport-github').Strategy;
 const User = require('../models/UserModel');
 const LastLogin = require('../models/LastLoginModel');
+const {redisClient} = require('../config/redisDb');
 
 const authController = {
     setupGitHubStrategy: (passport, req, res) => {
@@ -15,7 +14,12 @@ const authController = {
                 },
                 async (accessToken, refreshToken, profile, done) => {
                     try {
-                        let user = await User.findOne({ githubId: profile.id });
+                        
+                        let user = await redisClient.get(`user:${profile.username}`);
+                        if(user) user = JSON.parse(user);
+                        else{
+                            user = await User.findOne({ githubId: profile.id });
+                        }
 
                         if (!user) {
                             user = new User({
@@ -28,8 +32,16 @@ const authController = {
 
                             await user.save();
                         }
+
+                        // Set user in Redis
+                        await redisClient.setEx(`user:${user.username}`, 3600, JSON.stringify(user));
+
                         const lastLogin = new LastLogin({ expiresIn: new Date(Date.now() + 1 * 60 * 60 * 1000), token: accessToken, user: user.username });
                         await lastLogin.save();
+
+                        // Set LastLogin in Redis
+                        await redisClient.setEx(`lastLogin:${lastLogin.token}`, 3600, JSON.stringify(lastLogin));
+
                         return done(null, { user, token: accessToken });
                     } catch (err) {
                         console.error(err);

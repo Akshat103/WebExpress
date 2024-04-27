@@ -1,12 +1,11 @@
 const Resume = require('../models/ResumeDataModel');
 const { containerClient } = require('../config/azureStorage');
-const upload = require('../config/multerConfig');
+const { redisClient } = require('../config/redisDb');
 
 // Function to upload file to Azure Storage
 async function uploadToAzureStorage(file) {
   const blobName = `${Date.now()}-${file.originalname}`;
   const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-  const uploadBlobResponse = await blockBlobClient.uploadData(file.buffer);
   return blockBlobClient.url;
 }
 
@@ -15,7 +14,15 @@ const formController = {
 
   index: async (req, res) => {
     try {
-      const resume = await Resume.findOne({ user: req.userData.username });
+      const username = req.userData.username;
+      // Set resume in Redis
+      let resume;
+      resume = await redisClient.get(`resume:${username}`);
+      if (resume) resume = JSON.parse(resume);
+      else {
+        resume = await Resume.findOne({ user: username });
+        await redisClient.setEx(`resume:${username}`, 3600, JSON.stringify(resume));
+      }
       if (!resume) res.render('form');
       else res.redirect('/profile');
     }
@@ -28,7 +35,13 @@ const formController = {
   updatePage: async (req, res) => {
     try {
       const username = req.userData.username;
-      const resume = await Resume.findOne({ user: username });
+      let resume;
+      resume = await redisClient.get(`resume:${username}`);
+      if (resume) resume = JSON.parse(resume);
+      else {
+        resume = await Resume.findOne({ user: username });
+        await redisClient.setEx(`resume:${username}`, 3600, JSON.stringify(resume));
+      }
       if (resume) {
         res.render('update', { resume });
       }
@@ -74,6 +87,8 @@ const formController = {
         return res.status(404).render('error', { message });
       }
 
+      await redisClient.setEx(`resume:${username}`, 3600, JSON.stringify(updatedResume));
+
       const message = 'Resume updated successfully';
       res.status(200).json({ message });
 
@@ -105,7 +120,9 @@ const formController = {
       };
       const newResume = new Resume(combinedData);
       newResume.save()
-        .then(savedResume => {
+        .then(async savedResume => {
+          // Set resume in Redis
+          await redisClient.setEx(`resume:${username}`, 3600, JSON.stringify(newResume));
           const message = 'Resume created successfully';
           res.status(201).json({ message });
         })

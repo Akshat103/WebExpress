@@ -1,21 +1,27 @@
 const LastLogin = require('../models/LastLoginModel');
-const Resume = require('../models/ResumeDataModel');
-const jwt = require('jsonwebtoken');
+const {redisClient} = require('../config/redisDb');
 
 const authenticateToken = async (req, res, next) => {
     try {
         if (req.headers.cookie === undefined) {
             return res.status(401).redirect('/auth/github');
         }
+        
         const cookieString = req.headers.cookie;
         const cookies = cookieString.split('; ').reduce((prev, current) => {
             const [name, value] = current.split('=');
             prev[name] = value;
             return prev;
         }, {});
+
         const token = cookies.token;
+        
         try {
-            const lastLogin = await LastLogin.findOne({ token });
+            let lastLogin = await redisClient.get(`lastLogin:${token}`);
+            if(lastLogin) lastLogin = JSON.parse(lastLogin);
+            else{
+                lastLogin = await LastLogin.findOne({ token });
+            }
 
             if (!lastLogin) {
                 console.log("Last log in not found")
@@ -27,18 +33,12 @@ const authenticateToken = async (req, res, next) => {
                 console.log("Last log in expired")
                 return res.redirect('/auth/github');
             }
-
-            const username = lastLogin.user;
-
-            const UserResume = Resume.findOne({ user: username });
-            let resume;
-            if(UserResume) resume = true;
-            else resume = false;
-            req.userData = { username, resume };
-            req.session.username = username;
+            
+            const username = lastLogin.user.toLowerCase();
+            req.userData = { username };
 
         } catch (error) {
-            console.error('Error decoding JWT token:', error);
+            console.error('Error decoding token:', error);
             return res.redirect('/auth/github');
         }
 

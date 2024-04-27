@@ -5,6 +5,6 @@ const profileController = require('../controllers/profileController');
 const authenticateToken = require('../middleware/authMiddleware');
 
 // Define routes
-router.get('/', authenticateToken, profileController.index);
+router.get('/profile', authenticateToken, profileController.index);
 
 module.exports = router;

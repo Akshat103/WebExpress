@@ -236,7 +236,7 @@ const formFormat = () => {
 
   yearInputs.forEach(input => {
     input.addEventListener('input', function () {
-      const currentYear = new Date().getFullYear()+1;
+      const currentYear = new Date().getFullYear() + 1;
       if (parseInt(this.value) > currentYear) {
         this.value = currentYear;
       }
