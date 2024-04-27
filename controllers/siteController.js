@@ -13,7 +13,7 @@ const siteController = {
       if (resumeData) resumeData = JSON.parse(resumeData);
       else {
         resumeData = await Resume.findOne({ user: username });
-        await redisClient.setEx(`resume:${username}`, 3600, JSON.stringify(resume));
+        await redisClient.setEx(`resume:${username}`, 3600, JSON.stringify(resumeData));
       }
 
       if (!resumeData) {
