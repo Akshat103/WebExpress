@@ -6,7 +6,14 @@ const { redisClient } = require('../config/redisDb');
 async function uploadToAzureStorage(file) {
   const blobName = `${Date.now()}-${file.originalname}`;
   const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-  return blockBlobClient.url;
+  
+  try {
+    await blockBlobClient.uploadData(file.buffer);
+    return blockBlobClient.url;
+  } catch (error) {
+    console.error("Error uploading file to Azure Storage:", error);
+    throw error;
+  }
 }
 
 // Controller functions
